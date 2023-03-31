@@ -1710,14 +1710,34 @@ void main(void) {
     vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
     vec2 pixel = 1.0/u_resolution;
     vec2 st = gl_FragCoord.xy * pixel;
+
+
+
     
     Material material = materialNew();
     #if defined(FLOOR) && defined(MODEL_VERTEX_TEXCOORD)
-    material.albedo.rgb = vec3(0.5) + checkBoard(v_texcoord, vec2(8.0)) * 0.5;
+        material.albedo.rgb = vec3(0.5) + checkBoard(v_texcoord, vec2(12.0)) * 0.5;
     #endif
+
 
     color = pbr(material);
     color = linear2gamma(color);
+
+     // override floor (debug)
+    #if defined(FLOOR)
+        color = vec4(0.0);
+    #endif
+
+    #if !defined(FLOOR)
+        // put the uv colors on the sphere
+        vec3 c1 = vec3(1.0,0.0,0.0) * v_position.x;
+        vec3 c2 = vec3(0.0,1.0,0.0) * v_position.y;
+        color *= vec4(c1 + c2, 1.0);
+    #endif
+
+    #ifdef BACKGROUND
+    color = vec4(0.0,1.0,1.0,0.5);
+    #endif
 
     gl_FragColor = color;
 }

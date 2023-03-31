@@ -3,6 +3,8 @@
 precision mediump float;
 #endif
 
+uniform vec2    u_resolution;
+uniform float   u_time;
 uniform mat4    u_modelViewProjectionMatrix;
 uniform mat4    u_projectionMatrix;
 uniform mat4    u_modelMatrix;
@@ -64,7 +66,7 @@ void main(void) {
 #ifdef LIGHT_SHADOWMAP
     v_lightCoord = u_lightMatrix * v_position;
 #endif
-    
-    gl_Position = u_projectionMatrix * u_viewMatrix * v_position;
-    //gl_Position = u_modelViewProjectionMatrix * v_position;
+    vec4 v_p = vec4(v_position.x * (abs(cos(u_time))),v_position.y,v_position.z,v_position.w);
+    gl_Position = u_projectionMatrix * u_viewMatrix * v_p;
+    // gl_Position = u_modelViewProjectionMatrix * v_position;
 }
